@@ -1,7 +1,6 @@
 import { BelongsToMany, Column, HasMany, Model, PrimaryKey, Table } from "sequelize-typescript";
 import ProductModel from "./product.model";
 import InvoiceProductModel from "./invoice-product.model";
-import { Col } from "sequelize/types/utils";
 
 @Table({
     tableName: "invoices",

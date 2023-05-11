@@ -10,7 +10,7 @@ type InvoiceProps = {
     name: string;
     document: string;
     address: Address;
-    items: Product[];
+    items?: Product[];
     createdAt?: Date;
     updatedAt?: Date;
 }
@@ -22,11 +22,21 @@ export default class Invoice extends BaseEntity implements AggregateRoot {
     private _items: Product[]
 
     constructor(props: InvoiceProps) {
-        super(props.id);
+        super(props.id, props.createdAt, props.updatedAt);
         this._name = props.name;
         this._document = props.document;
         this._address = props.address;
-        this._items = props.items;
+        this._items = props.items || [];
+    }
+
+    addItem(product: Product): void {
+        this._items.push(product);
+    }
+
+    addItems(products: Product[]): void {
+        products.forEach((product) => {
+            this.addItem(product);
+        });
     }
 
     get name(): string {
@@ -43,5 +53,9 @@ export default class Invoice extends BaseEntity implements AggregateRoot {
 
     get items(): Product[] {
         return this._items;
+    }
+
+    get total(): number {
+        return this._items.reduce((total, product) => total + product.price, 0);
     }
 }

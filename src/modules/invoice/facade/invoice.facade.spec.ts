@@ -5,6 +5,7 @@ import GenerateInvoiceUseCase from "../usecase/generate-invoice/generate-invoice
 import InvoiceFacade from "./invoice.facade";
 import InvoiceProductModel from "../repository/invoice-product.model";
 import ProductModel from "../repository/product.model";
+import FindInvoiceUseCase from "../usecase/find-invoice/find-invoice.usecase";
 
 describe("InvoiceFacade tests", function () {
     let sequelize: Sequelize;
@@ -51,10 +52,11 @@ describe("InvoiceFacade tests", function () {
 
         const invoiceRepository = new InvoiceRepository();
         const generateInvoiceUseCase = new GenerateInvoiceUseCase(invoiceRepository);
+        const findUseCase = new FindInvoiceUseCase(invoiceRepository);
 
-        const invoiceFacade = new InvoiceFacade(generateInvoiceUseCase);
+        const invoiceFacade = new InvoiceFacade(generateInvoiceUseCase, findUseCase);
         const output = await invoiceFacade.generate(input);
-        
+
         expect(output).toEqual({
             id: expect.any(String),
             name: input.name,
@@ -79,5 +81,58 @@ describe("InvoiceFacade tests", function () {
             ],
             total: 15000.00,
         });
+    });
+
+    it("should find an invoice", async () => {
+        const input = {
+            name: "Name",
+            document: "12345",
+            street: "street",
+            number: "5",
+            complement: "",
+            city: "city",
+            state: "state",
+            zipCode: "000",
+            items: [
+                {
+                    id: "123",
+                    name: "iPhone",
+                    price: 6000.00,
+                },
+                {
+                    id: "1234",
+                    name: "iPad",
+                    price: 9000.00
+                }
+            ]
+        }
+
+        const invoiceRepository = new InvoiceRepository();
+        const generateUseCase = new GenerateInvoiceUseCase(invoiceRepository);
+        const findUseCase = new FindInvoiceUseCase(invoiceRepository);
+
+        const facade = new InvoiceFacade(generateUseCase, findUseCase);
+
+        const output = await facade.generate(input);
+        const found = await facade.find({ id: output.id });
+
+        expect(found).toBeDefined();
+        expect(found.id).toBeDefined();
+        expect(found.name).toBe(input.name);
+        expect(found.document).toBe(input.document);
+        expect(found.address.street).toBe(input.street);
+        expect(found.address.number).toBe(input.number);
+        expect(found.address.complement).toBe(input.complement);
+        expect(found.address.city).toBe(input.city);
+        expect(found.address.state).toBe(input.state);
+        expect(found.address.zipCode).toBe(input.zipCode);
+        expect(found.items.length).toBe(input.items.length);
+        found.items.forEach((item, index) => {
+            expect(item.id).toBe(input.items[index].id);
+            expect(item.name).toBe(input.items[index].name);
+            expect(item.price).toBe(input.items[index].price);
+        });
+        expect(found.total).toBe(15000.00);
+        expect(found.createdAt).toBeDefined();
     });
 });

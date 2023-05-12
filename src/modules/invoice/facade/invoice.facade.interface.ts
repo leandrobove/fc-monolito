@@ -1,38 +1,8 @@
-export interface GenerateInvoiceFacadeInputDto {
-    name: string;
-    document: string;
-    street: string;
-    number: string;
-    complement: string;
-    city: string;
-    state: string;
-    zipCode: string;
-    items: {
-        id: string;
-        name: string;
-        price: number;
-    }[];
-}
-
-export interface GenerateInvoiceFacadeOutputDto {
-    id: string;
-    name: string;
-    document: string;
-    street: string;
-    number: string;
-    complement: string;
-    city: string;
-    state: string;
-    zipCode: string;
-    items: {
-        id: string;
-        name: string;
-        price: number;
-    }[];
-    total: number;
-}
-
+import { FindInvoiceFacadeOutputDto } from "./find-invoice.facade.dto";
+import { FindInvoiceFacadeInputDto } from "./find-invoice.facade.dto";
+import { GenerateInvoiceFacadeInputDto, GenerateInvoiceFacadeOutputDto } from "./generate-invoice.facade.dto";
 
 export default interface InvoiceFacadeInterface {
     generate(input: GenerateInvoiceFacadeInputDto): Promise<GenerateInvoiceFacadeOutputDto>;
+    find(input: FindInvoiceFacadeInputDto): Promise<FindInvoiceFacadeOutputDto>;
 }

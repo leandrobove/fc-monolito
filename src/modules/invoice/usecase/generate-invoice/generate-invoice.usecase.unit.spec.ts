@@ -36,6 +36,8 @@ describe("Unit test to generate invoice use case", function () {
         const usecase = new GenerateInvoiceUseCase(mockRepository);
         const output = await usecase.execute(input);
 
+        expect(mockRepository.save).toBeCalled();
+
         expect(output).toEqual({
             id: expect.any(String),
             name: input.name,

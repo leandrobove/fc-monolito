@@ -50,6 +50,8 @@ describe("Unit test find invoice use case", function () {
         const usecase = new FindInvoiceUseCase(invoiceRepository);
         const output = await usecase.execute(input);
 
+        expect(invoiceRepository.find).toBeCalled();
+
         expect(output).toEqual({
             id: input.id,
             name: invoice.name,

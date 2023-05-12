@@ -1,5 +1,4 @@
-import { BelongsToMany, Column, HasMany, Model, PrimaryKey, Table } from "sequelize-typescript";
-import ProductModel from "./product.model";
+import { Column, HasMany, Model, PrimaryKey, Table } from "sequelize-typescript";
 import InvoiceProductModel from "./invoice-product.model";
 
 @Table({
@@ -23,7 +22,7 @@ export default class InvoiceModel extends Model {
     @Column({ allowNull: false })
     declare addressNumber: string;
 
-    @Column({})
+    @Column({ allowNull: false })
     declare addressComplement: string;
 
     @Column({ allowNull: false })
@@ -35,13 +34,8 @@ export default class InvoiceModel extends Model {
     @Column({ allowNull: false })
     declare addressZipCode: string;
 
-    @BelongsToMany(() => ProductModel, {
-        through: { model: () => InvoiceProductModel },
-    })
-    declare items: ProductModel[];
-
     @HasMany(() => InvoiceProductModel)
-    declare invoiceProducts: InvoiceProductModel[];
+    declare items: InvoiceProductModel[];
 
     @Column({ allowNull: false })
     declare createdAt: Date;

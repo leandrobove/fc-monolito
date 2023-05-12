@@ -5,7 +5,6 @@ import Invoice from "../domain/entity/invoice.entity";
 import Address from "../domain/value-object/address.value-object";
 import Product from "../domain/entity/product.entity";
 import InvoiceRepository from "./invoice.repository";
-import ProductModel from "./product.model";
 import InvoiceProductModel from "./invoice-product.model";
 
 const address = new Address({
@@ -48,7 +47,7 @@ describe("InvoiceRepository test", () => {
             sync: { force: true },
         });
 
-        await sequelize.addModels([InvoiceModel, ProductModel, InvoiceProductModel]);
+        await sequelize.addModels([InvoiceModel, InvoiceProductModel]);
         await sequelize.sync();
     });
 

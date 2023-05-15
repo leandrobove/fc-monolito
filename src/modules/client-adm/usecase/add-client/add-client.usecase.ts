@@ -1,4 +1,5 @@
 import Id from "../../../@shared/domain/value-object/id.value-object";
+import Address from "../../domain/address.value-object";
 import Client from "../../domain/client.entity";
 import ClientGateway from "../../gateway/client.gateway";
 import {
@@ -17,8 +18,16 @@ export default class AddClientUseCase {
     const props = {
       id: new Id(input.id) || new Id(),
       name: input.name,
+      document: input.document,
       email: input.email,
-      address: input.address,
+      address: new Address({
+        street: input.street,
+        number: input.number,
+        complement: input.complement,
+        city: input.city,
+        state: input.state,
+        zipCode: input.zipCode,
+      }),
     };
 
     const client = new Client(props);
@@ -28,7 +37,13 @@ export default class AddClientUseCase {
       id: client.id.id,
       name: client.name,
       email: client.email,
-      address: client.address,
+      document: client.document,
+      street: client.address.street,
+      number: client.address.number,
+      complement: client.address.complement,
+      city: client.address.city,
+      state: client.address.state,
+      zipCode: client.address.zipCode,
       createdAt: client.createdAt,
       updatedAt: client.updatedAt,
     };

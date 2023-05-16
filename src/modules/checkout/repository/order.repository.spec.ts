@@ -1,6 +1,6 @@
 import { Sequelize } from "sequelize-typescript";
-import OrderItemModel from "./order-items.model";
-import OrderModel from "./order.model";
+import { OrderItemModel } from "./order-items.model";
+import { OrderModel } from "./order.model";
 import OrderRepository from "./order.repository";
 import Client from "../domain/client.entity";
 import Id from "../../@shared/domain/value-object/id.value-object";

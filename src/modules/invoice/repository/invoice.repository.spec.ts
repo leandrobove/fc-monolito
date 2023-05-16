@@ -1,11 +1,11 @@
 import { Sequelize } from "sequelize-typescript";
 import Id from "../../@shared/domain/value-object/id.value-object";
-import InvoiceModel from "./invoice.model";
+import { InvoiceModel } from "./invoice.model";
 import Invoice from "../domain/entity/invoice.entity";
 import Address from "../domain/value-object/address.value-object";
 import Product from "../domain/entity/product.entity";
 import InvoiceRepository from "./invoice.repository";
-import InvoiceProductModel from "./invoice-product.model";
+import { InvoiceProductModel } from "./invoice-product.model";
 
 const address = new Address({
     street: "street",

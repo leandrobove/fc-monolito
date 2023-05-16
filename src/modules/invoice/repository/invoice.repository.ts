@@ -3,8 +3,8 @@ import Invoice from "../domain/entity/invoice.entity";
 import Product from "../domain/entity/product.entity";
 import Address from "../domain/value-object/address.value-object";
 import InvoiceGateway from "../gateway/invoice.gateway.interface";
-import InvoiceModel from "./invoice.model";
-import InvoiceProductModel from "./invoice-product.model";
+import { InvoiceModel } from "./invoice.model";
+import { InvoiceProductModel } from "./invoice-product.model";
 
 export default class InvoiceRepository implements InvoiceGateway {
 

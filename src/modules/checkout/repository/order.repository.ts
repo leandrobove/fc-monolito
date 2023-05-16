@@ -5,8 +5,8 @@ import Order from "../domain/order.entity";
 import Product from "../domain/product.entity";
 import CheckoutGateway from "../gateway/checkout.gateway";
 import { ClientModel } from "./client.model";
-import OrderItemModel from "./order-items.model";
-import OrderModel from "./order.model";
+import { OrderItemModel } from "./order-items.model";
+import { OrderModel } from "./order.model";
 
 export default class OrderRepository implements CheckoutGateway {
 

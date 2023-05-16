@@ -1,13 +1,23 @@
 import Id from "../../@shared/domain/value-object/id.value-object";
+import Address from "./address.value-object";
 import Client from "./client.entity";
 import Order from "./order.entity";
 import Product from "./product.entity";
+
+const address = new Address({
+    street: "street",
+    number: "number",
+    complement: "complement",
+    city: "city",
+    state: "state",
+    zipCode: "zipcode"
+});
 
 const client = new Client({
     id: new Id("123"),
     name: "John",
     email: "john@gmail.com",
-    address: "Street"
+    address: address
 });
 
 const prod1 = new Product({
@@ -38,6 +48,7 @@ describe("Order entity unit tests", () => {
         expect(order.items).toBe(products);
         expect(order.items.length).toBe(2);
         expect(order.client).toBe(client);
+        expect(order.client.address).toBe(address);
         expect(order.total).toBe(16000.00);
         expect(order.createdAt).not.toBeNull();
     });

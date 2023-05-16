@@ -9,6 +9,7 @@ type OrderProps = {
     client: Client;
     status?: string;
     items: Product[];
+    invoiceId?: string;
 };
 
 export default class Order extends BaseEntity implements AggregateRoot {
@@ -16,17 +17,23 @@ export default class Order extends BaseEntity implements AggregateRoot {
     private _status: string;
     private _items: Product[];
     private _total: number;
+    private _invoiceId: string;
 
     constructor(props: OrderProps) {
         super(props.id);
         this._client = props.client;
         this._status = props.status || "pending";
         this._items = props.items;
+        this._invoiceId = props.invoiceId;
         this.calculateTotal();
     }
 
-    approve() {
+    approve(): void {
         this._status = "approved";
+    }
+
+    set invoiceId(invoiceId: string) {
+        this._invoiceId = invoiceId;
     }
 
     calculateTotal() {
@@ -45,6 +52,10 @@ export default class Order extends BaseEntity implements AggregateRoot {
 
     get items(): Product[] {
         return this._items;
+    }
+
+    get invoiceId(): string {
+        return this._invoiceId;
     }
 
     get total(): number {

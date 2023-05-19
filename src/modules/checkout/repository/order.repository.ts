@@ -1,6 +1,6 @@
 import Id from "../../@shared/domain/value-object/id.value-object";
 import Order from "../domain/order.entity";
-import Product from "../domain/product.entity";
+import OrderItem from "../domain/order-item.entity";
 import CheckoutGateway from "../gateway/checkout.gateway";
 import { OrderItemModel } from "./order-items.model";
 import { OrderModel } from "./order.model";
@@ -19,6 +19,7 @@ export default class OrderRepository implements CheckoutGateway {
                     name: p.name,
                     description: p.description,
                     salesPrice: p.salesPrice,
+                    productId: p.productId,
                 })),
                 total: order.total,
                 createdAt: order.createdAt,
@@ -40,11 +41,12 @@ export default class OrderRepository implements CheckoutGateway {
             id: new Id(orderModel.id),
             clientId: orderModel.clientId,
             status: orderModel.status,
-            items: orderModel.items.map((product) => (new Product({
+            items: orderModel.items.map((product) => (new OrderItem({
                 id: new Id(product.id),
                 name: product.name,
                 description: product.description,
                 salesPrice: product.salesPrice,
+                productId: product.productId,
             }))),
             invoiceId: orderModel.invoiceId,
         });

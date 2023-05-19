@@ -1,5 +1,5 @@
 import Id from "../../../@shared/domain/value-object/id.value-object";
-import Product from "../../domain/product.entity";
+import OrderItem from "../../domain/order-item.entity";
 import { PlaceOrderInputDto } from "./place-order.dto";
 import PlaceOrderUseCase from "./place-order.usecase";
 
@@ -148,17 +148,19 @@ describe("PlaceOrderUseCase unit test", () => {
             );
 
             const products = {
-                "1": new Product({
-                    id: new Id("1"),
+                "1": new OrderItem({
+                    id: new Id("A"),
                     name: "Product 1",
                     description: "some description",
                     salesPrice: 40,
+                    productId: "1"
                 }),
-                "2": new Product({
-                    id: new Id("2"),
+                "2": new OrderItem({
+                    id: new Id("B"),
                     name: `Product 2`,
                     description: "some description",
                     salesPrice: 30,
+                    productId: "2"
                 }),
             };
 
@@ -305,7 +307,7 @@ describe("PlaceOrderUseCase unit test", () => {
         it("should return a product", async () => {
             const mockCatalogFacade = {
                 find: jest.fn().mockResolvedValue({
-                    id: "0",
+                    id: "1",
                     name: "Product 0",
                     description: "Product 0 description",
                     salesPrice: 0,
@@ -316,11 +318,12 @@ describe("PlaceOrderUseCase unit test", () => {
             placeOrderUseCase["_catalogFacade"] = mockCatalogFacade;
 
             await expect(placeOrderUseCase["getProduct"]("0")).resolves.toEqual(
-                new Product({
-                    id: new Id("0"),
+                new OrderItem({
+                    id: expect.anything(),
                     name: "Product 0",
                     description: "Product 0 description",
                     salesPrice: 0,
+                    productId: "1"
                 })
             );
             expect(mockCatalogFacade.find).toHaveBeenCalledTimes(1);

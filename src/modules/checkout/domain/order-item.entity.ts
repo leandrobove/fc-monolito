@@ -6,18 +6,21 @@ type ProductProps = {
     name: string;
     description: string;
     salesPrice: number;
+    productId: string;
 };
 
-export default class Product extends BaseEntity {
+export default class OrderItem extends BaseEntity {
     private _name: string;
     private _description: string;
     private _salesPrice: number;
+    private _productId: string;
 
     constructor(props: ProductProps) {
         super(props.id);
         this._name = props.name;
         this._description = props.description;
         this._salesPrice = props.salesPrice;
+        this._productId = props.productId;
     }
 
     get name(): string {
@@ -30,5 +33,9 @@ export default class Product extends BaseEntity {
 
     get salesPrice(): number {
         return this._salesPrice;
+    }
+
+    get productId(): string {
+        return this._productId;
     }
 }

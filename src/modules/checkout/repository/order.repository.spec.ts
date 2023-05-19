@@ -3,23 +3,25 @@ import { OrderItemModel } from "./order-items.model";
 import { OrderModel } from "./order.model";
 import OrderRepository from "./order.repository";
 import Id from "../../@shared/domain/value-object/id.value-object";
-import Product from "../domain/product.entity";
+import OrderItem from "../domain/order-item.entity";
 import Order from "../domain/order.entity";
 
 const clientId = "123";
 
-const prod1 = new Product({
+const prod1 = new OrderItem({
     id: new Id("ABC"),
     name: "iPhone",
     description: "Very good phone",
     salesPrice: 6000.00,
+    productId: "1",
 });
 
-const prod2 = new Product({
+const prod2 = new OrderItem({
     id: new Id("ABCD"),
     name: "iPad",
     description: "Very good tablet",
     salesPrice: 10000.00,
+    productId: "2",
 });
 
 const products = [prod1, prod2];
@@ -67,6 +69,7 @@ describe("OrderRepository test", () => {
         expect(orderModel.invoiceId).toBe(order.invoiceId);
         expect(orderModel.items.length).toBe(2);
         expect(orderModel.items[0].salesPrice).toBe(order.items[0].salesPrice);
+        expect(orderModel.items[0].productId).toBe(order.items[0].productId);
         expect(orderModel.createdAt).not.toBeNull();
     });
 
@@ -90,6 +93,7 @@ describe("OrderRepository test", () => {
         expect(orderFound.items[0].salesPrice).toBe(order.items[0].salesPrice);
         expect(orderFound.items[0].description).toBe(order.items[0].description);
         expect(orderFound.items[0].name).toBe(order.items[0].name);
+        expect(orderFound.items[0].productId).toBe(order.items[0].productId);
         expect(orderFound.createdAt).not.toBeNull();
     });
 });

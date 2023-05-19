@@ -7,7 +7,7 @@ import { PaymentFacadeOutputDto } from "../../../payment/facade/facade.interface
 import ProductAdmFacadeInterface from "../../../product-adm/facade/product-adm.facade.interface";
 import StoreCatalogFacadeInterface from "../../../store-catalog/facade/store-catalog.facade.interface";
 import Order from "../../domain/order.entity";
-import Product from "../../domain/product.entity";
+import OrderItem from "../../domain/order-item.entity";
 import CheckoutGateway from "../../gateway/checkout.gateway";
 import { PlaceOrderInputDto, PlaceOrderOutputDto } from "./place-order.dto";
 
@@ -42,7 +42,7 @@ export default class PlaceOrderUseCase implements UseCaseInterface {
         await this.validateProducts(input);
 
         //get products and create product object array
-        const products: Product[] = await Promise.all(
+        const products: OrderItem[] = await Promise.all(
             input.products.map((p) => this.getProduct(p.productId))
         );
 
@@ -99,7 +99,7 @@ export default class PlaceOrderUseCase implements UseCaseInterface {
             total: order.total,
             products: order.items.map((p) => {
                 return {
-                    productId: p.id.id,
+                    productId: p.productId,
                 };
             }),
         };
@@ -122,18 +122,19 @@ export default class PlaceOrderUseCase implements UseCaseInterface {
         }
     }
 
-    private async getProduct(productId: string): Promise<Product> {
+    private async getProduct(productId: string): Promise<OrderItem> {
         const productFound = await this._catalogFacade.find({ id: productId });
 
         if (!productFound) {
             throw new Error("Product not found");
         }
 
-        return new Product({
-            id: new Id(productFound.id),
+        return new OrderItem({
+            id: new Id(),
             name: productFound.name,
             description: productFound.description,
             salesPrice: productFound.salesPrice,
+            productId: productFound.id,
         });
     }
 }

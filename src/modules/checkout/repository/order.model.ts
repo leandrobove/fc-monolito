@@ -1,6 +1,5 @@
-import { BelongsTo, Column, ForeignKey, HasMany, Model, PrimaryKey, Table } from "sequelize-typescript";
+import { Column, HasMany, Model, PrimaryKey, Table } from "sequelize-typescript";
 import { OrderItemModel } from "./order-items.model";
-import { ClientModel } from "./client.model";
 
 @Table({
     tableName: "orders",
@@ -11,12 +10,8 @@ export class OrderModel extends Model {
     @Column({ allowNull: false })
     declare id: string;
 
-    @ForeignKey(() => ClientModel)
     @Column({ allowNull: false })
     declare clientId: string;
-
-    @BelongsTo(() => ClientModel)
-    declare client: ClientModel;
 
     @Column({ allowNull: true })
     declare invoiceId: string;

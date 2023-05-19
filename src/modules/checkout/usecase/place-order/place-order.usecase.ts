@@ -6,8 +6,6 @@ import PaymentFacadeInterface from "../../../payment/facade/facade.interface";
 import { PaymentFacadeOutputDto } from "../../../payment/facade/facade.interface";
 import ProductAdmFacadeInterface from "../../../product-adm/facade/product-adm.facade.interface";
 import StoreCatalogFacadeInterface from "../../../store-catalog/facade/store-catalog.facade.interface";
-import Address from "../../domain/address.value-object";
-import Client from "../../domain/client.entity";
 import Order from "../../domain/order.entity";
 import Product from "../../domain/product.entity";
 import CheckoutGateway from "../../gateway/checkout.gateway";
@@ -49,23 +47,11 @@ export default class PlaceOrderUseCase implements UseCaseInterface {
         );
 
         //create client object
-        const client: Client = new Client({
-            id: new Id(findClientFacadeOutputDto.id),
-            name: findClientFacadeOutputDto.name,
-            email: findClientFacadeOutputDto.email,
-            address: new Address({
-                street: findClientFacadeOutputDto.street,
-                number: findClientFacadeOutputDto.number,
-                complement: findClientFacadeOutputDto.complement,
-                city: findClientFacadeOutputDto.city,
-                state: findClientFacadeOutputDto.state,
-                zipCode: findClientFacadeOutputDto.zipCode
-            }),
-        });
+        const clientId = findClientFacadeOutputDto.id;
 
         //create order object
         const order: Order = new Order({
-            client: client,
+            clientId: clientId,
             items: products,
         });
 
@@ -79,7 +65,7 @@ export default class PlaceOrderUseCase implements UseCaseInterface {
         let invoice = null;
         if (payment.status === "approved") {
             invoice = await this._invoiceFacade.generate({
-                name: client.name,
+                name: findClientFacadeOutputDto.name,
                 document: findClientFacadeOutputDto.document,
                 street: findClientFacadeOutputDto.street,
                 number: findClientFacadeOutputDto.number,
@@ -104,7 +90,7 @@ export default class PlaceOrderUseCase implements UseCaseInterface {
         payment.status === "approved" && order.approve();
 
         //persist order into the database
-        this._checkoutRepository.addOrder(order);
+        await this._checkoutRepository.addOrder(order);
 
         return {
             id: order.id.id,

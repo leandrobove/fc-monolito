@@ -2,26 +2,11 @@ import { Sequelize } from "sequelize-typescript";
 import { OrderItemModel } from "./order-items.model";
 import { OrderModel } from "./order.model";
 import OrderRepository from "./order.repository";
-import Client from "../domain/client.entity";
 import Id from "../../@shared/domain/value-object/id.value-object";
 import Product from "../domain/product.entity";
 import Order from "../domain/order.entity";
-import Address from "../domain/address.value-object";
-import { ClientModel } from "./client.model";
 
-const client = new Client({
-    id: new Id("123"),
-    name: "John",
-    email: "john@gmail.com",
-    address: new Address({
-        street: "street",
-        number: "number",
-        complement: "complement",
-        city: "city",
-        state: "state",
-        zipCode: "zipCode",
-    })
-});
+const clientId = "123";
 
 const prod1 = new Product({
     id: new Id("ABC"),
@@ -50,7 +35,7 @@ describe("OrderRepository test", () => {
             sync: { force: true },
         });
 
-        await sequelize.addModels([OrderModel, OrderItemModel, ClientModel]);
+        await sequelize.addModels([OrderModel, OrderItemModel]);
         await sequelize.sync();
     });
 
@@ -62,7 +47,7 @@ describe("OrderRepository test", () => {
         const orderRepository = new OrderRepository();
 
         const order = new Order({
-            client: client,
+            clientId: clientId,
             items: products,
             invoiceId: "1",
         });
@@ -76,7 +61,7 @@ describe("OrderRepository test", () => {
         });
 
         expect(orderModel.id).toBe(order.id.id);
-        expect(orderModel.clientId).toBe(order.client.id.id);
+        expect(orderModel.clientId).toBe(order.clientId);
         expect(orderModel.status).toBe(order.status);
         expect(orderModel.total).toBe(order.total);
         expect(orderModel.invoiceId).toBe(order.invoiceId);
@@ -88,7 +73,7 @@ describe("OrderRepository test", () => {
     it("should find an order", async () => {
         const orderRepository = new OrderRepository();
         const order = new Order({
-            client: client,
+            clientId: clientId,
             items: products,
             invoiceId: "1"
         });
@@ -97,8 +82,7 @@ describe("OrderRepository test", () => {
         const orderFound = await orderRepository.find(order.id.id);
 
         expect(orderFound.id.id).toBe(order.id.id);
-        expect(orderFound.client.id.id).toBe(order.client.id.id);
-        expect(orderFound.client.name).toBe(order.client.name);
+        expect(orderFound.clientId).toBe(order.clientId);
         expect(orderFound.status).toBe(order.status);
         expect(orderFound.total).toBe(order.total);
         expect(orderFound.invoiceId).toBe(order.invoiceId);

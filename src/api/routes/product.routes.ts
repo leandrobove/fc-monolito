@@ -8,6 +8,7 @@ productRouter.post("/", async (req: Request, res: Response) => {
     const facade = ProductAdmFacadeFactory.create();
     try {
         const input = {
+            id: req.body.id,
             name: req.body.name,
             description: req.body.description,
             purchasePrice: req.body.purchasePrice,
